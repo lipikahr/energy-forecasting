@@ -316,6 +316,7 @@
 
     const body = {
       region: state.region,
+      date: state.date,
       month: state.month,
       day_of_week: pyDow,
       hour: state.hour,

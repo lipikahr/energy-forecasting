@@ -20,6 +20,14 @@ frontend_folder = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(_
 app = Flask(__name__, static_folder=frontend_folder, static_url_path='')
 CORS(app)
 
+@app.route('/', defaults={'path': 'index.html'})
+@app.route('/<path:path>')
+def serve_frontend(path):
+    file_path = os.path.join(frontend_folder, path)
+    if os.path.exists(file_path) and os.path.isfile(file_path):
+        return send_from_directory(frontend_folder, path)
+    return send_from_directory(frontend_folder, 'index.html')
+
 # Representative city coordinates for each region
 REGION_CITIES = {
     "North": {"city": "New Delhi", "lat": 28.6139, "lon": 77.2090},
@@ -220,8 +228,13 @@ def predict():
         else:
             status = "Normal Load"
 
+        low = max(0.0, round(target_hour_pred * 0.92, 2))
+        high = round(target_hour_pred * 1.08, 2)
+
         response_payload = {
-            "prediction_gw": round(target_hour_pred, 2),
+            "predicted_demand_gw": round(target_hour_pred, 2),
+            "confidence_low": low,
+            "confidence_high": high,
             "status": status,
             "hourly_forecast": [round(val, 2) for val in hourly_forecast],
             "regional_comparison": {r: round(val, 2) for r, val in comparison.items()}
