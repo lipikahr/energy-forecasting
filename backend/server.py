@@ -3,7 +3,7 @@ GridSense India — Flask Backend
 Provides /predict and /get_temperature endpoints for the forecasting dashboard.
 """
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import requests
 import math
@@ -15,7 +15,9 @@ import os
 import tensorflow as tf
 from sklearn.preprocessing import MinMaxScaler
 
-app = Flask(__name__, static_folder='.', static_url_path='')
+# Serve static files from ../frontend folder
+frontend_folder = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'frontend')
+app = Flask(__name__, static_folder=frontend_folder, static_url_path='')
 CORS(app)
 
 # Representative city coordinates for each region
