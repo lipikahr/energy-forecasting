@@ -46,6 +46,15 @@ from sklearn.metrics       import mean_absolute_error, mean_squared_error, r2_sc
 import lightgbm as lgb
 import xgboost  as xgb
 
+USE_DIRECTML = False
+try:
+    import tensorflow_directml as tf_directml
+    tf_directml.run()
+    USE_DIRECTML = True
+    print("tensorflow-directml enabled: using DirectML GPU support")
+except ImportError:
+    print("tensorflow-directml not installed: falling back to standard TensorFlow")
+
 import tensorflow as tf
 from tensorflow.keras.models   import Sequential
 from tensorflow.keras.layers   import LSTM, Dense, Dropout, Input
@@ -60,6 +69,9 @@ print(f"LightGBM    : {lgb.__version__}")
 print(f"XGBoost     : {xgb.__version__}")
 print(f"NumPy       : {np.__version__}")
 print(f"Pandas      : {pd.__version__}")
+print("Using GPU?", len(tf.config.list_physical_devices('GPU')) > 0)
+if len(tf.config.list_physical_devices('GPU')) > 0:
+    print("Available GPU devices:", tf.config.list_physical_devices('GPU'))
 
 # ?? Output directory ??????????????????????????????????????????????????????????
 OUTPUT_DIR = "outputs"
