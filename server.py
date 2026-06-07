@@ -99,10 +99,12 @@ def load_data_and_model():
     print("Scaler fit and baseline sequence loaded.")
 
 # Load everything on startup
+import traceback
 try:
     load_data_and_model()
 except Exception as e:
     print(f"Error loading model/data: {e}")
+    traceback.print_exc()
 
 def predict_24_hours(start_date_str, start_hour, input_temp, is_holiday):
     """
